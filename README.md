@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Shop Marketplace
 
-## Getting Started
+A Marketplace tab built inside a Shop
 
-First, run the development server:
+## Live Demo
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+[Live Website](https://shop-marketplace-flax.vercel.app/shop)
+
+## Preview
+
+![Marketplace with EMI plans](./preview/preview1.png)
+
+![Marketplace with EMI plans](./preview/preview2.png)
+
+## Tech Stack
+
+- Next.js 15
+- TypeScript
+- Tailwind CSS
+
+## Structure
+
+```
+app/
+  shop/page.tsx                          → /shop route
+  api/marketplace/products/route.ts      → mock API endpoint
+components/
+  shop/
+    ShopContent.tsx           → tab switcher (Top Brands / Nearby Stores / Marketplace)
+    TopBrandsPanel.tsx        → blank
+    NearbyStoresPanel.tsx     → blank
+    marketplace/
+      MarketplacePanel.tsx    → fetches products, handles loading/error states
+      ProductCard.tsx         → product display, variant + EMI plan selection, CTA
+types/marketplace.ts          → Product / ProductVariant / EMIPlan types
+lib/mock-marketplace-data.ts  → mock product data
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Data handling
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Product/EMI data is **not hardcoded into UI components**. It's served from a mock API route (`/api/marketplace/products`) with a simulated network delay, and fetched client-side via `useEffect` + `fetch`. This mirrors how a real backend integration would work. Swapping the mock route for a real API later requires no changes to the UI components.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## States handled
 
-## Learn More
+- **Loading** — skeleton cards matching loading-skeleton pattern
+- **Error** — a fallback card if the fetch fails
+- **Image fallback** — if a product image fails to load, a "No image" placeholder is shown instead of a broken image icon
+- **Empty EMI selection** — the CTA button is disabled until the user picks an EMI plan for that product's currently selected variant
 
-To learn more about Next.js, take a look at the following resources:
+## Running locally
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm install
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Visit `http://localhost:3000/shop`.
